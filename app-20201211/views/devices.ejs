@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('./layout/head') %>
+</head>
+<style>
+    table tbody {
+        display: block;
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    table thead,
+    table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+</style>
+
+<body>
+    <div id="app" class="wrapper">
+        <%- include('./layout/adminMenu') %>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Sidebar</span>
+                    </button>
+                </div>
+            </nav>
+
+            <h2>Manage Devices</h2>
+
+            <table class="table">
+                <thead class="thead-light" style="text-align: center;">
+                    <tr>
+                        <th scope="col">Device ID</th>
+                        <th scope="col">WIE</th>
+                        <th scope="col">Objekt</th>
+                        <th scope="col">VE</th>
+                        <th scope="col">Elemente</th>
+                        <th scope="col">ID</th>
+                    </tr>
+                </thead>
+                <thead class="thead-light" style="text-align: center;">
+                    <tr>
+                        <th scope="col" >
+                            <input style="width: 100%;" v-model="deviceid" type="text">
+                        </th>
+                        <th scope="col">
+                            <input style="width: 100%;" v-model="wie" type="text"></th>
+                        <th scope="col">
+                            <input style="width: 100%;" v-model="obj" type="text">
+                        </th>
+                        <th scope="col">
+                            <input style="width: 100%;" v-model="ve" type="text">
+                        </th>
+                        <th scope="col">
+                            <input style="width: 100%;" v-model="ei" type="text">
+                        </th>
+                        <th scope="col">
+                            <input style="width: 100%;" v-model="id" type="text">
+                        </th>
+                    </tr>
+                </thead>
+                <tbody style="text-align: center;">
+
+                    <tr v-for="(d,index ) in displayData" :key="index">
+                        <th scope="row" style="color: rgb(17, 169, 240);"><a
+                                :href="'/secured/dashboard/device/'+d._id">{{d.deviceid}}</a></th>
+                        <th>{{d.wie}}</th>
+                        <td>{{d.obj}}</td>
+                        <td>{{d.ve}}</td>
+                        <td>{{d.ei}}</td>
+                        <td>{{d.id}}</td>
+                    </tr>
+                    <tr>
+
+                </tbody>
+            </table>
+
+            <div class="line"></div>
+
+        </div>
+    </div>
+
+    <%- include('./layout/footer') %>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                deviceData: [],
+                displayData: [],
+                deviceid: '',
+                id: '',
+                wie: '',
+                date: '',
+                obj: '',
+                ve: '',
+                ei: '',
+                type: '',
+                types: ['water', 'electricity', 'gas', 'heat']
+            },
+            async mounted() {
+                let response = await fetch('/secured/api/devices');
+                if (response.ok) {
+                    let r = await response.json();
+                    console.log(r.data)
+                    this.deviceData = r.data;
+                    this.displayData = [...this.deviceData];
+                }
+            },
+            methods: {
+
+                getFormattedDate(date) {
+                    date = new Date(date)
+                    var year = date.getFullYear();
+
+                    var month = (1 + date.getMonth()).toString();
+                    month = month.length > 1 ? month : '0' + month;
+
+                    var day = date.getDate().toString();
+                    day = day.length > 1 ? day : '0' + day;
+
+                    return day + '/' + month + '/' + year;
+                }, search() {
+                    this.displayData = this.deviceData.filter(e => e.wie.includes(this.wie))
+                    this.displayData = this.displayData.filter(e => e.obj.includes(this.obj))
+                    this.displayData = this.displayData.filter(e => e.ve.includes(this.ve))
+                    this.displayData = this.displayData.filter(e => e.ei.includes(this.ei))
+                    this.displayData = this.displayData.filter(e => e.deviceid.includes(this.deviceid))
+                    // this.displayData = this.displayData.filter(e => e.id === this.id)
+                    // console.log(this.types[e.type-1])
+                    // this.displayData = this.displayData.filter(e => this.types[e.type - 1].includes(this.type))
+                }
+            },
+            watch: {
+                deviceid: function(val) {
+                    this.search();
+                },
+                wie: function(val) {
+                    this.search();
+                },
+                obj: function(val) {
+                    this.search();
+                },
+                ei: function(val) {
+                    this.search();
+                },
+                ve: function(val) {
+                    this.search();
+                },
+                id:  function(val) {
+                    this.search();
+                },
+            },
+        })
+    </script>
+</body>
+
+</html>
