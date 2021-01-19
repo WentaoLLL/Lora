@@ -29,47 +29,47 @@
                 <div class="container-fluid">
                     <button type="button" id="sidebarCollapse" class="btn btn-info">
                         <i class="fas fa-align-left"></i>
-                        <span>Sidebar</span>
+                        <span>Menü</span>
                     </button>
                 </div>
             </nav>
-            <h2>Edit Unit Prices</h2>
+            <h2>Preise erneuern</h2>
             <form @submit="onSubmit" onsubmit="return false" method="post">
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="water">Water Unit Price</label>
+                        <label for="water">Wasser Preise</label>
                         <input type="number" step="0.01" v-model="form.water" class="form-control" id="water"
                             placeholder="" required>
                     </div>
                     <div class="form-group col-md-6">
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="el">Electricity Unit Price</label>
+                        <label for="el">Storm Preise</label>
                         <input type="number" step="0.01" v-model="form.el" class="form-control" id="el" placeholder=""
                             required>
                     </div>
                     <div class="form-group col-md-6">
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="gas">Gas Unit Price</label>
+                        <label for="gas">Gas Preise</label>
                         <input type="number" step="0.01" v-model="form.gas" class="form-control" id="gas" placeholder=""
                             required>
                     </div>
                     <div class="form-group col-md-6">
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="gas">Heat Unit Price</label>
+                        <label for="gas">Heizung Preise</label>
                         <input type="number" step="0.01" v-model="form.heat" class="form-control" id="gas"
                             placeholder="" required>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary" style="background-color: #7386D5;">Edit</button>
+                <button type="submit" class="btn btn-primary" style="background-color: #7386D5;">Erneuern</button>
             </form>
 
             <div class="line"></div>
 
             <div v-if="msg" class="alert alert-success" role="alert">
-                Success
+                Fertig
             </div>
             <div v-if="err" class="alert alert-danger" role="alert">
                 {{err}}

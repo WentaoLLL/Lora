@@ -35,11 +35,11 @@
                     </button>
                 </div>
             </nav>
-            <h4>Add A Device</h4>
+            <h4>Neue Zähler hinzufügen</h4>
             <form @submit="onSubmit" onsubmit="return false" method="post">
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="deviceid">Device Id</label>
+                        <label for="deviceid">Zähler Id</label>
                         <input type="text" v-model="form.deviceid" class="form-control" id="deviceid"
                             placeholder="Device Id" required>
                     </div>
@@ -81,10 +81,10 @@
                     </div>
 
                 </div>
-                <button type="submit" class="btn btn-primary" style="background-color: #7386D5;">Create</button>
+                <button type="submit" class="btn btn-primary" style="background-color: #7386D5;">Hinzufügen</button>
                 <br>
                 <div v-if="id" class="alert alert-success" role="alert">
-                    New Device is added. ID is {{id}}
+                    Neue Zähler ist hinzufügt. ID is {{id}}
                 </div>
             </form>
 

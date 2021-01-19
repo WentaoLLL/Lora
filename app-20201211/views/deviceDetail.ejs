@@ -31,12 +31,12 @@
 
                     <button type="button" id="sidebarCollapse" class="btn btn-info">
                         <i class="fas fa-align-left"></i>
-                        <span>Sidebar</span>
+                        <span>Menü</span>
                     </button>
                 </div>
             </nav>
 
-            <h2>Record Details <%= id %></h2>
+            <h2>Zähler Einzelheiten <%= id %></h2>
 
             <table class="table" style="height: 45%;">
                 <!-- <thead class="thead-light">
@@ -75,7 +75,7 @@
 
 
                     <tr>
-                        <td><b>Device Id</b></td>
+                        <td><b>Zähler Id</b></td>
                         <td v-if="!edit">{{form.deviceid}}</td>
                         <td v-else><input v-model="copy.deviceid" type="text"></td>
                         <td></td>
@@ -91,11 +91,11 @@
             </table>
 
             <div class="line"></div>
-            <div v-if="!edit"><button @click="editData" class="btn btn-sm btn-warning">Edit</button>&nbsp;<button
-                    @click="deleteData" class="btn btn-sm btn-danger">Delete</button></div>
+            <div v-if="!edit"><button @click="editData" class="btn btn-sm btn-warning">Erneuern</button>&nbsp;<button
+                    @click="deleteData" class="btn btn-sm btn-danger">Löschen</button></div>
             <div v-else>
-                <button @click="update(edit)" class="btn btn-sm btn-success">Save</button>
-                <button @click="edit=false" class="btn btn-sm btn-danger">Cancel</button>
+                <button @click="update(edit)" class="btn btn-sm btn-success">Speichern</button>
+                <button @click="edit=false" class="btn btn-sm btn-danger">Ausfallen</button>
             </div>
 
         </div>

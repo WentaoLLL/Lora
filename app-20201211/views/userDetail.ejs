@@ -31,14 +31,14 @@
 
                     <button type="button" id="sidebarCollapse" class="btn btn-info">
                         <i class="fas fa-align-left"></i>
-                        <span>Sidebar</span>
+                        <span>Menü</span>
                     </button>
                 </div>
             </nav>
 
-            <h2>User Details
-                <span v-if="form.role === 2">(Customer)</span>
-                <span v-if="form.role === 1">(Secondary Admin)</span>
+            <h2>Kontos Einzelheiten
+                <span v-if="form.role === 2">(Kunden)</span>
+                <span v-if="form.role === 1">(Zweite Admin)</span>
             </h2>
 
             <table class="table" style="height: 45%;">
@@ -52,7 +52,7 @@
                 </thead> -->
                 <tbody style="height: 100%; max-height: 100%;">
                     <tr>
-                        <td><b>User Id</b></td>
+                        <td><b>Konto Id</b></td>
                         <td>{{form._id}}</td>
                         <td></td>
                     </tr>
@@ -91,10 +91,10 @@
             </table>
             <% if(user.role < 1){%>
             <div class="line"></div>
-            <div v-if="!edit"><button @click="editData" class="btn btn-sm btn-warning">Edit</button></div>
+            <div v-if="!edit"><button @click="editData" class="btn btn-sm btn-warning">Erneuern</button></div>
             <div v-else>
-                <button @click="update(edit)" class="btn btn-sm btn-success">Save</button>
-                <button @click="edit=false" class="btn btn-sm btn-danger">Cancel</button>
+                <button @click="update(edit)" class="btn btn-sm btn-success">Speichern</button>
+                <button @click="edit=false" class="btn btn-sm btn-danger">Ausfallen</button>
             </div>
             <%}%>
         </div>

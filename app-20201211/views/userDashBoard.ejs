@@ -32,7 +32,7 @@
 
                     <button type="button" id="sidebarCollapse" class="btn btn-info">
                         <i class="fas fa-align-left"></i>
-                        <span>Sidebar</span>
+                        <span>Menü</span>
                     </button>
                 </div>
             </nav>
@@ -43,17 +43,17 @@
                     <div style="text-align:center; margin-top: 20px;">
                         <button
                             style="margin-right: 20px;border:0;border-radius: 4px;height: 30px;width:70px;background-color: #87CEFA;"
-                            onclick="ByDay()">Day</button>
+                            onclick="ByDay()">Tag</button>
                         <button
                             style="margin-right: 20px;border:0;border-radius: 4px;background-color:gray;height: 30px;width:70px;background-color: #87CEFA;"
-                            onclick="ByMonth()">Month</button>
+                            onclick="ByMonth()">Monat</button>
                         <button
                             style="border:0;border-radius: 4px;background-color:gray;height: 30px;width:70px;background-color: #87CEFA;margin-right: 100px;"
-                            onclick="ByYear()">Year</button>
+                            onclick="ByYear()">Jahr</button>
                         <input type="text" data-range="true" data-multiple-dates-separator=" - " data-language="en" class="datepicker-here" style="width:200px"/>
                         <button
                             style="margin-right: 20px;border:0;border-radius: 4px;height: 30px;width:70px;background-color: #87CEFA;"
-                            onclick="BySearch()">Search</button>
+                            onclick="BySearch()">Suchen</button>
                     </div>
                 </div>
                 <div style="display: inline-block;width: 28%;vertical-align: top;">
@@ -62,7 +62,7 @@
                     <div style="text-align:center"><button style="display: hidden;border:0"></button></div>
                 </div>
             </div>
-            <h2>History</h2>
+            <h2>     </h2>
             <table class="table">
                 <thead class="thead-light" style="text-align: center;">
                     <tr>
@@ -72,9 +72,9 @@
                         <th scope="col">VE</th>
                         <th scope="col">Elemente</th>
                         <th scope="col">Type</th>
-                        <th scope="col">Device ID</th>
-                        <th scope="col">Usage</th>
-                        <th scope="col">Date</th>
+                        <th scope="col">Zähler ID</th>
+                        <th scope="col">Zahl</th>
+                        <th scope="col">Datum</th>
                     </tr>
                 </thead>
                 <thead class="thead-light" style="text-align: center;">
@@ -101,14 +101,14 @@
                         </th>
                         <th scope="col"></th>
                         <th scope="col"><input v-model="date" style="width: 100%;" @change="onChange('date')"
-                                type="text" placeholder="dd/mm/yyyy"></th>
+                                type="text" placeholder="TT/MM/JJJJ"></th>
                     </tr>
                 </thead>
                 <tbody style="text-align: center;">
 
                     <tr v-for="(d,index ) in displayData" :key="index">
                         <th scope="row" style="color: rgb(17, 169, 240);"><a
-                                :href="'/secured/user/dashboard/data/'+d._id">view</a></th>
+                                :href="'/secured/user/dashboard/data/'+d._id">Einzelheiten</a></th>
                         <th>{{d.wie}}</th>
                         <td>{{d.obj}}</td>
                         <td>{{d.ve}}</td>
@@ -141,7 +141,7 @@
                 ei: '',
                 type: '',
                 deviceid: '',
-                types: ['water', 'electricity', 'gas', 'heat']
+                types: ['Wasser', 'Storm', 'Gas', 'Heizung']
             },
             async mounted() {
                 let response = await fetch('/secured/api/user/data');
@@ -212,8 +212,8 @@
             red: 'rgb(255, 99, 132)',
             orange: 'rgb(255, 159, 64)',
             yellow: 'rgb(255, 205, 86)',
-            green: 'rgb(75, 192, 192)',
-            blue: 'rgb(54, 162, 235)',
+            green: 'rgb(75, 192, 112)',
+            blue: 'rgb(54, 122, 235)',
             purple: 'rgb(153, 102, 255)',
             grey: 'rgb(201, 203, 207)'
         };
@@ -225,28 +225,29 @@
                 data: {
                     labels: body.label_x_day,
                     datasets: [{
-                        label: 'Water ( price: ' + body.labels['Water'] + ' )',
-                        backgroundColor: window.chartColors.red,
-                        borderColor: window.chartColors.red,
+                       // label: 'Wasser ( Preise: ' + body.labels['Water'] + ' )',
+                        label: 'Wasser ( kL/h )',
+                        backgroundColor: window.chartColors.blue,
+                        borderColor: window.chartColors.blue,
                         data: body.water_day,
                         fill: false,
                     }, {
-                        label: 'Electricity ( price: ' + body.labels['Electricity'] + ' )',
+                        label: 'Storm ( kW/h )',
                         fill: false,
-                        backgroundColor: window.chartColors.blue,
-                        borderColor: window.chartColors.blue,
+                        backgroundColor: window.chartColors.green,
+                        borderColor: window.chartColors.green,
                         data: body.electricity_day,
                     }, {
-                        label: 'Gas ( price: ' + body.labels['Gas'] + ' )',
+                        label: 'Gas ( kW/h )',
                         fill: false,
-                        backgroundColor: window.chartColors.orange,
-                        borderColor: window.chartColors.orange,
+                        backgroundColor: window.chartColors.yellow,
+                        borderColor: window.chartColors.yellow,
                         data: body.gas_day,
                     }, {
-                        label: 'Heat ( price: ' + body.labels['Heat'] + ' )',
+                        label: 'Heizung ( kL/h )',
                         fill: false,
-                        backgroundColor: window.chartColors.purple,
-                        borderColor: window.chartColors.purple,
+                        backgroundColor: window.chartColors.red,
+                        borderColor: window.chartColors.red,
                         data: body.heat_day,
                     }]
                 },
@@ -254,7 +255,7 @@
                     responsive: true,
                     title: {
                         display: true,
-                        text: "Everyday's Usage"
+                        text: "Tagesstände"
                     },
                     tooltips: {
                         mode: 'index',
@@ -273,14 +274,14 @@
                             display: false,
                             scaleLabel: {
                                 display: false,
-                                labelString: 'Date'
+                                labelString: 'Datum'
                             }
                         }],
                         yAxes: [{
                             display: true,
                             scaleLabel: {
                                 display: true,
-                                labelString: 'Usage'
+                                labelString: 'Stände'
                             }
                         }]
                     }
@@ -293,24 +294,24 @@
         function createTotalCharts(body) {
             var color = Chart.helpers.color;
             var barChartData = {
-                labels: ['Water', 'Electricity', 'Gas', 'Heat'],
+                labels: ['Wasser(kL)', 'Storm(kW)', 'Gas(kW)', 'Heizung(kL)'],
                 datasets: [{
                     label: '',
                     backgroundColor: [
-                        color(window.chartColors.red).alpha(0.5).rgbString(),
                         color(window.chartColors.blue).alpha(0.5).rgbString(),
-                        color(window.chartColors.orange).alpha(0.5).rgbString(),
-                        color(window.chartColors.purple).alpha(0.5).rgbString(),
+                        color(window.chartColors.green).alpha(0.5).rgbString(),
+                        color(window.chartColors.yellow).alpha(0.5).rgbString(),
+                        color(window.chartColors.red).alpha(0.5).rgbString(),
                     ],
                     borderColor: [
-                        window.chartColors.red,
                         window.chartColors.blue,
-                        window.chartColors.orange,
-                        window.chartColors.purple
+                        window.chartColors.green,
+                        window.chartColors.yellow,
+                        window.chartColors.red
                     ],
                     borderWidth: 1,
                     data: [
-                        body.water_total, body.electricity_total, body.gas_total, body.heat_total
+                        body.water_total , body.electricity_total, body.gas_total, body.heat_total
                     ]
                 }],
             };
@@ -335,7 +336,7 @@
                     },
                     title: {
                         display: true,
-                        text: 'Total Usage  ( ' + datestr + ' )',
+                        text: 'Gesamte Zählen  ( ' + datestr + ' )',
                         padding: 30
                     },
                     scales: {
@@ -468,7 +469,7 @@
                     window.myLine.update()
                 }
             } else {
-                alert('please select date!')
+                alert('Bitte Datei auswählen!')
             }
         }
 
