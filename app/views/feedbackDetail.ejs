@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('./layout/head') %>
+</head>
+<style>
+    table tbody {
+        display: block;
+        max-height: 250px;
+        overflow-y: scroll;
+    }
+
+    table thead,
+    table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+</style>
+
+<body>
+    <div id="app" class="wrapper">
+        <%- include('./layout/adminMenu') %>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Sidebar</span>
+                    </button>
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <a href="/secured/dashboard/feedbacks">Back</a>
+                    </button>
+                </div>
+            </nav>
+
+            <h2>FeedBack Details <%= id %></h2>
+
+            <table class="table" style="height: 70%;">
+                <tbody style="height: 100%; max-height: 100%;">
+                    <tr>
+                        <td><b>Kunden Name</b></td>
+                        <td>{{feedback.sender.username}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><b>Sender ID</b></td>
+                        <td>{{feedback.sender._id}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><b>Record ID</b></td>
+                        <td><a :href="'/secured/dashboard/data/'+ feedback.dataid._id" style="color: #007bff;"> {{feedback.dataid._id}}</a></td>
+                        <td></td>
+                    </tr>
+                    <!-- <tr>
+                        <td><b>Water Useage</b></td>
+                        <td>{{feedback.dataid.water}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><b>Electrcity Useage</b></td>
+                        <td>{{feedback.dataid.electricity}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><b>Gas Useage</b></td>
+                        <td>{{feedback.dataid.gas}}</td>
+                        <td></td>
+                    </tr> -->
+                    <tr>
+                        <td><b>Nachricht</b></td>
+                        <td style="white-space: pre-line">{{feedback.message}}</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <%- include('./layout/footer') %>
+
+    <script>
+        var id = '<%= id  %>';
+        new Vue({
+            el: '#app',
+            data: {
+                feedback:{}
+            },
+            async mounted() {
+                let response = await fetch('/secured/api/feedback/' + id);
+                if (response.ok) {
+
+                    let r = await response.json();
+                    console.log(r.data)
+                    this.feedback = r.data;
+                }
+            },
+            methods: {
+                getFormattedDate(date) {
+                    date = new Date(date)
+                    var year = date.getFullYear();
+                    var month = (1 + date.getMonth()).toString();
+                    month = month.length > 1 ? month : '0' + month;
+                    var day = date.getDate().toString();
+                    day = day.length > 1 ? day : '0' + day;
+                    return day + '/' + month + '/' + year;
+                },
+            },
+        })
+    </script>
+</body>
+
+</html>
