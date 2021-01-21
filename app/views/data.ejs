@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('./layout/head') %>
+</head>
+<style>
+    table tbody {
+        display: block;
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    table thead,
+    table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .highcharts-figure {
+        width: 80%;
+    }
+</style>
+<link rel="stylesheet" href="/stylesheets/chart.min.css">
+
+<body>
+    <div id="app" class="wrapper">
+        <%- include('./layout/adminMenu') %>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Menü</span>
+                    </button>
+                </div>
+            </nav>
+            <pp class="bg-info text-white border border-dark">
+                Datei Liste
+            </pp>
+            <!--<h3>Datei Liste</h3>-->
+
+    <table class="table">
+        <thead class="thead-light" style="text-align: center;">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">WIE</th>
+                <th scope="col">Objekt</th>
+                <th scope="col">VE</th>
+                <th scope="col">Elemente</th>
+                <th scope="col">Einheit</th>
+                <th scope="col">Zähler ID</th>
+                <th scope="col">Zählerstand</th>
+                <th scope="col">Datum</th>
+            </tr>
+        </thead>
+        <thead class="thead-light" style="text-align: center;">
+            <tr>
+                <th scope="col" style="width: 10vw;">
+                    <!-- <input style="width: 100%;" v-model="userid" @change="onChange('id')" type="text" placeholder="Record ID"> -->
+                        </th>
+                        <th scope="col">
+                            <input style="width: 100%;" v-model="wie" type="text"></th>
+                        <th scope="col">
+                            <input style="width: 100%;" v-model="obj" type="text">
+                        </th>
+                        <th scope="col">
+                            <input style="width: 100%;" v-model="ve" type="text">
+                        </th>
+                        <th scope="col">
+                            <input style="width: 100%;" v-model="ei" type="text">
+                        </th>
+                        <th scope="col">
+                            <input style="width: 100%;" v-model="type" type="text">
+                        </th>
+                        <th scope="col">
+                            <input style="width: 100%;" v-model="deviceid" type="text">
+                        </th>
+                        <th scope="col"></th>
+                        <th scope="col"><input v-model="date" style="width: 100%;" @change="onChange('date')"
+                                type="text" placeholder="TT/MM/JJJJ"></th>
+                    </tr>
+                </thead>
+                <tbody style="text-align: center;">
+
+                    <tr v-for="(d,index ) in displayData" :key="index">
+                        <th scope="row" style="width: 10vw;color: rgb(17, 169, 240);"><a
+                                :href="'/secured/dashboard/data/'+d._id">Einzelheiten</a></th>
+                        <th>{{d.wie}}</th>
+                        <td>{{d.obj}}</td>
+                        <td>{{d.ve}}</td>
+                        <td>{{d.ei}}</td>
+                        <td>{{types[d.type-1]}}</td>
+                        <td>{{d.deviceid}}</td>
+                        <td>{{d.value}}</td>
+                        <td>{{getFormattedDate(d.time)}}</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+            <div class="line"></div>
+
+        </div>
+    </div>
+
+    <%- include('./layout/footer') %>
+
+    <script>
+        var content, config;
+        new Vue({
+            el: '#app',
+            data: {
+                userData: [],
+                displayData: [],
+                wie: '',
+                date: '',
+                obj: '',
+                ve: '',
+                ei: '',
+                type: '',
+                deviceid: '',
+                types: ['Wasser [m^3]', 'Storm [kW/h]', 'Gas [m^3]', 'Heizung [m^3]']
+            },
+            async mounted() {
+                let response = await fetch('/secured/api/data');
+                if (response.ok) {
+                    let r = await response.json();
+                    console.log(r.data)
+                    this.userData = r.history;
+                    this.displayData = [...this.userData];
+                    // if (r.data) {
+                    //     content = r.data;
+                    //     createCharts(r.data);
+                    //     createTotalCharts(r.data)
+                    // }
+                }
+            },
+            methods: {
+                getFormattedDate(date) {
+                    date = new Date(date)
+                    var year = date.getFullYear();
+
+                    var month = (1 + date.getMonth()).toString();
+                    month = month.length > 1 ? month : '0' + month;
+
+                    var day = date.getDate().toString();
+                    day = day.length > 1 ? day : '0' + day;
+
+                    return day + '/' + month + '/' + year;
+                }, search() {
+                    this.displayData = this.userData.filter(e => e.wie.includes(this.wie))
+                    this.displayData = this.displayData.filter(e => e.obj.includes(this.obj))
+                    this.displayData = this.displayData.filter(e => e.ve.includes(this.ve))
+                    this.displayData = this.displayData.filter(e => e.ei.includes(this.ei))
+                    if (this.deviceid !== '')
+                        this.displayData = this.displayData.filter(e => e.deviceid && e.deviceid.includes(this.deviceid))
+                    // console.log(this.types[e.type-1])
+                    this.displayData = this.displayData.filter(e => this.types[e.type - 1].includes(this.type))
+                }
+            },
+            watch: {
+                wie: function (val) {
+                    this.search();
+                },
+                obj: function (val) {
+                    this.search();
+                },
+                ei: function (val) {
+                    this.search();
+                },
+                ve: function (val) {
+                    this.search();
+                },
+                type: function (val) {
+                    this.search();
+                },
+                deviceid: function (val) {
+                    this.search();
+                },
+                date: function (val) {
+                    this.wie = '';
+                    this.obj = '';
+                    this.ve = '';
+                    this.ei = '';
+                    this.type = '';
+                    this.displayData = this.userData.filter(e => this.getFormattedDate(e.time).includes(val))
+                }
+            },
+        });
+
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)'
+        };
+
+        function createCharts(body) {
+            //var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            config = {
+                type: 'line',
+                data: {
+                    labels: body.label_x_month,
+                    datasets: [{
+                        label: 'Water ( price: ' + body.labels['Water'] + ' )',
+                        backgroundColor: window.chartColors.red,
+                        borderColor: window.chartColors.red,
+                        data: body.water_month,
+                        fill: false,
+                    }, {
+                        label: 'Electricity ( price: ' + body.labels['Electricity'] + ' )',
+                        fill: false,
+                        backgroundColor: window.chartColors.blue,
+                        borderColor: window.chartColors.blue,
+                        data: body.electricity_month,
+                    }, {
+                        label: 'Gas ( price: ' + body.labels['Gas'] + ' )',
+                        fill: false,
+                        backgroundColor: window.chartColors.orange,
+                        borderColor: window.chartColors.orange,
+                        data: body.gas_month,
+                    }, {
+                        label: 'Heat ( price: ' + body.labels['Heat'] + ' )',
+                        fill: false,
+                        backgroundColor: window.chartColors.purple,
+                        borderColor: window.chartColors.purple,
+                        data: body.heat_month,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: "Everyday's Usage"
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                        custom: function(tooltip) { tooltip.body && tooltip.body.map(i => {
+                            var value = i.lines[0];
+                            console.log(typeof value)
+                            i.lines[0] = value.substr(0, value.indexOf('(')) + value.substr(value.indexOf(')')+1)
+                        }) }
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: false,
+                                labelString: 'Date'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Usage'
+                            }
+                        }]
+                    }
+                }
+            };
+            var ctx = document.getElementById('chartCanvas').getContext('2d');
+            window.myLine = new Chart(ctx, config);
+        }
+
+        function createTotalCharts(body) {
+            var color = Chart.helpers.color;
+            var barChartData = {
+                labels: ['Water', 'Electricity', 'Gas', 'Heat'],
+                datasets: [{
+                    label: '',
+                    backgroundColor: [
+                        color(window.chartColors.red).alpha(0.5).rgbString(),
+                        color(window.chartColors.blue).alpha(0.5).rgbString(),
+                        color(window.chartColors.orange).alpha(0.5).rgbString(),
+                        color(window.chartColors.purple).alpha(0.5).rgbString(),
+                    ],
+                    borderColor: [
+                        window.chartColors.red,
+                        window.chartColors.blue,
+                        window.chartColors.orange,
+                        window.chartColors.purple
+                    ],
+                    borderWidth: 1,
+                    data: [
+                        body.water_total, body.electricity_total, body.gas_total, body.heat_total
+                    ]
+                }],
+            };
+
+            var date = new Date()
+            var year = date.getFullYear();
+            var month = (1 + date.getMonth()).toString();
+            month = month.length > 1 ? month : '0' + month;
+            var day = date.getDate().toString();
+            day = day.length > 1 ? day : '0' + day;
+            const datestr = day + ' / ' + month + ' / ' + year;
+
+            var ctx = document.getElementById('totalCanvas').getContext('2d');
+            window.myBar = new Chart(ctx, {
+                type: 'bar',
+                data: barChartData,
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'top',
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Total Usage  ( ' + datestr + ' )'
+                    },
+                    scales: {
+                        xAxes: [{
+                            "ticks": { "beginAtZero": true },
+                            gridLines: {
+                                display: false
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true, backdropColor: "rgba(255,255,255,0)",
+                                userCallback: function (value, index, values) {
+                                    return "";
+                                }
+                            },
+                            gridLines: {
+                                display: false
+                            }
+                        }]
+                    },
+                    hover: { animationDuration: 0 },
+                    animation: {
+
+                        duration: 1,
+
+                        onComplete: function () {
+
+                            var chartInstance = this.chart,
+
+                                ctx = chartInstance.ctx;
+
+                            ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+
+                            ctx.textAlign = 'center';
+
+                            ctx.textBaseline = 'bottom';
+
+
+
+                            this.data.datasets.forEach(function (dataset, i) {
+
+                                var meta = chartInstance.controller.getDatasetMeta(i);
+
+                                meta.data.forEach(function (bar, index) {
+
+                                    var data = dataset.data[index];
+
+                                    ctx.fillText(data, bar._model.x, bar._model.y - 5);
+
+                                });
+
+                            });
+
+                        }
+
+                    }
+                },
+
+            });
+            
+        }
+
+        function ByDay() {
+            config.data.labels = content.label_x_month;
+            config.data.datasets.forEach(function (dataset) {
+                if (dataset.label == 'Water') dataset.data = content.water_month;
+                if (dataset.label == 'Electricity') dataset.data = content.electricity_month;
+                if (dataset.label == 'Gas') dataset.data = content.gas_month;
+                if (dataset.label == 'Heat') dataset.data = content.heat_month;
+            });
+            window.myLine.update()
+        }
+
+        function ByMonth() {
+            config.data.labels = content.label_x_year;
+            config.data.datasets.forEach(function (dataset) {
+                if (dataset.label == 'Water') dataset.data = content.water_year;
+                if (dataset.label == 'Electricity') dataset.data = content.electricity_year;
+                if (dataset.label == 'Gas') dataset.data = content.gas_year;
+                if (dataset.label == 'Heat') dataset.data = content.heat_year;
+            });
+            window.myLine.update()
+        }
+    </script>
+</body>
+
+</html>

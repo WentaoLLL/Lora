@@ -1,0 +1,74 @@
+<nav id="sidebar">
+
+    <div class="sidebar-header">
+        <img src="/images/LogoWGK.png" style="height:100px"/>
+        <!--<a class="navbar-brand" href="#"> HS-Anhalt & WGK</a>-->
+     <ul class="list-unstyled components">
+        <li>
+            <a class="bg-info text-white border border-white" ><%=user.role < 1?'Erste':'Zweite' %>
+                Adminsoberfläche</a>
+         </li>
+     </ul>
+
+    </div>
+    <ul class="list-unstyled components">
+        <!--<p>sdfsdf</p>-->
+        <li>
+            <a href="#usermenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Kontos verwalten</a>
+            <ul class="collapse list-unstyled" id="usermenu">
+                <li>
+                    <a href="/secured/dashboard/users">Kontos Liste</a>
+                </li>
+                <% if(user.role < 1){ %>
+                <li>
+                    <a href="/secured/dashboard/add/user">Neues Konto erstellen</a>
+                </li>
+                <%}%>
+               
+            </ul>
+        </li>
+        <li>
+            <a href="#datamenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Datei verwalten</a>
+            <ul class="collapse list-unstyled" id="datamenu">
+                <li>
+                    <a href="/secured/dashboard/data">Datei Liste</a>
+                </li>
+                <% if(user.role < 1){ %>
+                <li>
+                    <a href="/secured/dashboard/updateprice">Preise erneuern</a>
+                </li>
+                <%}%>
+            </ul>
+        </li>
+      
+                <li>
+                    <a href="#devicemenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Zählers verwalten</a>
+                    <ul class="collapse list-unstyled" id="devicemenu">
+                        <% if(user.role == 1){ %>
+                <li>
+                    <a href="/secured/dashboard/add/device">Neue Zähler hinzufügen</a>
+                </li>
+                <%} else {%>
+                <li>
+                    <a href="/secured/dashboard/devices">Zählers Liste</a>
+                </li>
+                <%} %>
+            </ul>
+        </li>
+
+        <li>
+            <a href="/secured/dashboard/feedbacks">Rückmeldungen</a>
+        </li>
+
+    </ul>
+
+
+    <ul class="list-unstyled CTAs">
+        <li>
+            <a href="/" class="download">Homepage</a>
+        </li>
+        <li>
+            <a href="/logout" class="download">Ausloggen</a>
+        </li>
+    </ul>
+</nav>

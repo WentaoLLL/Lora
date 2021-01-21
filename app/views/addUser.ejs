@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('./layout/head') %>
+</head>
+<style>
+    table tbody {
+        display: block;
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    table thead,
+    table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+</style>
+
+<body>
+    <div id="app" class="wrapper">
+        <%- include('./layout/adminMenu') %>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Menü</span>
+                    </button>
+                </div>
+            </nav>
+            <h2>Neues Konto erstellen</h2>
+            <form @submit="onSubmit" onsubmit="return false" method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="email">Email</label>
+                        <input type="email" v-model="form.email" class="form-control" id="email" placeholder="Email"
+                            required>
+                    </div>
+                    <div class="form-group col-md-6">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="username">Kontosname</label>
+                        <input type="text" v-model="form.username" class="form-control" id="username"
+                            placeholder="Username" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="wie">Wirtschaftseinheit</label>
+                        <input type="text" v-model="form.wie" class="form-control" id="wie"
+                            placeholder="Wirtschaftseinheit" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="password">Password</label>
+                        <input type="password" v-model="form.password" class="form-control" id="password"
+                            placeholder="Password" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="password">Password betätigen</label>
+                        <input type="password" v-model="form.password2" class="form-control" id="password"
+                            placeholder="Password" required>
+                    </div>
+
+                </div>
+                <button type="submit" class="btn btn-primary" style="background-color: #7386D5;">Erstellen</button>
+            </form>
+
+            <div class="line"></div>
+
+            <div v-if="id" class="alert alert-success" role="alert">
+                Neues Kontosname ist {{id}}
+            </div>
+            <div v-if="err" class="alert alert-danger" role="alert">
+                {{err}}
+            </div>
+        </div>
+    </div>
+
+    <%- include('./layout/footer') %>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                form: {
+                    email: '',
+                    username: '',
+                    wie: '',
+                    password: '',
+                    password2: ''
+                },
+                id: '',
+                err: ''
+            },
+            async mounted() {
+            },
+            methods: {
+                async onSubmit(e) {
+                    e.preventDefault();
+                    this.id = null;
+                    this.err = null
+                    if (this.form.password !== this.form.password2) {
+                        return this.err = "Password dose not match";
+                    }
+
+
+
+                    try {
+                        let response = await fetch('/secured/api/add/user', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                username: this.form.username,
+                                password: this.form.password,
+                                wie: this.form.wie,
+                                email: this.form.email
+                            })
+                        })
+                        if (response.ok) {
+                            let data = await response.json();
+                            console.log(data);
+                            this.id = data.data._id;
+                            this.form = {
+                                email: '',
+                                username: '',
+                                password: '',
+                                password2: ''
+                            }
+                        } else
+                            throw await response.json()
+                    } catch (e) {
+
+                        this.err = "Email schon existiert"
+                        console.log(e)
+                    }
+
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
