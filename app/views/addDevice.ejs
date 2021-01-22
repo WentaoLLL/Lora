@@ -31,11 +31,18 @@
 
                     <button type="button" id="sidebarCollapse" class="btn btn-info">
                         <i class="fas fa-align-left"></i>
-                        <span>Sidebar</span>
+                        <span>Menü</span>
                     </button>
                 </div>
             </nav>
-            <h4>Neue Zähler hinzufügen</h4>
+
+            <div>
+                <img src="/images/city.png"  style="height:330px"/>
+            </div>
+
+
+            <h5 class="bg-secondary text-white text-center">Neue Zähler hinzufügen</h5>
+
             <form @submit="onSubmit" onsubmit="return false" method="post">
                 <div class="form-row">
                     <div class="form-group col-md-6">
@@ -75,7 +82,7 @@
                     <div class="form-group col-md-6">
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="ei">ID</label>
+                        <label for="ei">Zähler Nr.</label>
                         <input type="number" v-model="form.id" class="form-control" id="password" placeholder="ID"
                             required>
                     </div>

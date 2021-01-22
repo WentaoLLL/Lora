@@ -35,10 +35,18 @@
                     </button>
                 </div>
             </nav>
-            <h2>Neues Konto erstellen</h2>
-            <form @submit="onSubmit" onsubmit="return false" method="post">
-                <div class="form-row">
-                    <div class="form-group col-md-6">
+
+
+            <div>
+                <img src="/images/city.png"  style="height:330px"/>
+            </div>
+
+        <div class="container col-lg-12 block">
+            <h5 class="bg-secondary text-white text-center">Neues Konto erstellen</h5>
+
+            <form @submit="onSubmit" onsubmit="return false" method="post" class="form-horizontal">
+                <div class="form-row" >
+                    <div class="form-group col-md-6" >
                         <label for="email">Email</label>
                         <input type="email" v-model="form.email" class="form-control" id="email" placeholder="Email"
                             required>
@@ -75,6 +83,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary" style="background-color: #7386D5;">Erstellen</button>
             </form>
+        </div>
 
             <div class="line"></div>
 

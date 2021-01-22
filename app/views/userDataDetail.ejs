@@ -37,7 +37,14 @@
                 </div>
             </nav>
 
-            <h2>Datei Einzelheiten </h2>
+
+            <div>
+                <img src="/images/city.png"  style="height:330px"/>
+            </div>
+
+
+            <h5 class="bg-secondary text-white text-center">Datei Einzelheiten</h5>
+
 
             <table class="table" style="height: 35%;">
                 <!-- <thead class="thead-light">
@@ -51,35 +58,35 @@
                 <tbody style="height: 100%; max-height: 100%;">
                     <tr>
                         <td><b>Wirtschaftseinheit</b></td>
-                        <td>{{form.wie}}</td>
+                        <td class="bg-secondary text-white text-right">{{form.wie}}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td><b>Objekt</b></td>
-                        <td>{{form.obj}}</td>
+                        <td class="bg-secondary text-white text-right">{{form.obj}}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td><b>Verwaltungseinheit</b></td>
-                        <td>{{form.ve}}</td>
+                        <td class="bg-secondary text-white text-right">{{form.ve}}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <td><b>Elemente</b></td>
-                        <td>{{form.ei}}</td>
+                        <td class="bg-secondary text-white text-right">{{form.ei}}</td>
                         <td></td>
                     </tr>
                     <tr>
                     <tr>
                         <td><b>Zähler Id</b></td>
-                        <td v-if="!edit">{{form.deviceid}}</td>
-                        <td v-else><input v-model="copy.deviceid" type="text"></td>
+                        <td v-if="!edit" class="bg-secondary text-white text-right">{{form.deviceid}}</td>
+                        <td v-else><input v-model="copy.deviceid" type="text" class="bg-secondary text-white text-right"></td>
                         <td></td>
                     </tr>
                     <tr>
                         <td><b>Zähler Nr.</b></td>
-                        <td v-if="!edit">{{form.id}}</td>
-                        <td v-else><input v-model="copy.id" type="number"></td>
+                        <td v-if="!edit" class="bg-secondary text-white text-right">{{form.id}}</td>
+                        <td v-else><input v-model="copy.id" type="number" class="bg-secondary text-white text-right"></td>
                         <td></td>
                     </tr>
                     <!-- <td><b>Water Useage</b></td>
@@ -94,14 +101,14 @@
                     </tr>
                     <tr>
                         <td><b>Zählerstand</b></td>
-                        <td v-if="!edit">{{form.value}}</td>
-                        <td v-else><input v-model="copy.value" type="number"></td>
+                        <td v-if="!edit" class="bg-secondary text-white text-right">{{form.value}}</td>
+                        <td v-else><input v-model="copy.value" type="number" class="bg-secondary text-white text-right"></td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td><b>Datum</b></td>
-                        <td>{{getFormattedDate(form.time)}}</td>
+                        <td class="bg-secondary text-white text-right">{{getFormattedDate(form.time)}}</td>
                         <td></td>
                     </tr>
                 </tbody>
