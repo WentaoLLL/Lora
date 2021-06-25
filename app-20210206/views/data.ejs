@@ -294,7 +294,7 @@
         function createCharts(body) {
             //var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             config = {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: body.label_x_hour,
                     datasets: [{
@@ -344,9 +344,9 @@
                     },
                     scales: {
                         xAxes: [{
-                            display: false,
+                            display: true,
                             scaleLabel: {
-                                display: false,
+                                display: true,
                                 labelString: 'Datum'
                             }
                         }],
