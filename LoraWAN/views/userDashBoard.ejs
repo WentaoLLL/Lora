@@ -49,11 +49,12 @@
                     <input type="file" value="Eingabe" style="display: none;" ref="referenceUpload" id="import"
                         @change="handleImportInputChange">
                     <div>
-                        <span>WIE</span>
-                        <input type="text" v-model="wieValue" style="padding-left: 10px;" />
-                        <button class="btn btn-primary">
-                            <a :href="'/excel/admin/excel/datas?wie='+wieValue" target="_self">Ausgabe</a>
-                        </button>
+                        <tr v-for="(d,index ) in displayData" :key="index">
+                
+                            <button class="btn btn-primary">
+                                <a :href="'/excel/admin/excel/datas?wie='+d.wie" target="_self">Ausgabe</a>
+                            </button>
+                        </tr>
                     </div>
                  </div>
                  
