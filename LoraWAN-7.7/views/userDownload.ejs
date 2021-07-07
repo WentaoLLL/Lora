@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('./layout/head') %>
+</head>
+<style>
+    table tbody {
+        display: block;
+        max-height: 200px;
+        overflow-y: scroll;
+    }
+
+    table thead,
+    table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+</style>
+
+<body>
+    <div id="app" class="wrapper">
+        <%- include('./layout/userMenu') %>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Sidebar</span>
+                    </button>
+                </div>
+            </nav>
+            <form action="/secured/api/user/download" method="post">
+
+                <div class="row">
+
+                    <div class="col-md-6" style="border-right: 1px solid #f2f2f2;">
+                        <h6>Base Infomation</h6>
+                        <div class="form-row">
+
+                            <div class="form-group col-md-6">
+                                <label for="username">Full Name</label>
+                                <input type="text" v-model="form.name" name="fullname" class="form-control"
+                                    id="username" placeholder="Full Name" required autofocus>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="email">Email</label>
+                                <input type="email" v-model="form.email" name="email" class="form-control" id="email"
+                                    placeholder="Email" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="phone">Phone</label>
+                                <input type="number" v-model="form.phone" name="phone" class="form-control" id="phone"
+                                    placeholder="phone" required>
+                            </div>
+                            <div class="line"></div>
+                            <h6>Address</h6>
+                            <div class="form-group col-md-12">
+                                <label for="street">Street</label>
+                                <input type="text" v-model="form.street" name="street" class="form-control" id="street"
+                                    placeholder="Street" required>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="zip">Zip Code</label>
+                                <input type="text" v-model="form.zip" name="zip" class="form-control" id="zip"
+                                    placeholder="zip code" required>
+                            </div>
+                            <div class="form-group col-md-9">
+                                <label for="city">City</label>
+                                <input type="text" v-model="form.city" name="city" class="form-control" id="city"
+                                    placeholder="zip code" required>
+                            </div>
+                            <div class="line"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Data Information</h6>
+                        <div class="form-row">
+
+                            <div class="form-group col-md-12">
+                                <label for="date">Select Date</label>
+                                <select class="form-control" name="id" id="date" v-model="form.recordid">
+                                    <option v-for="d in data" :value="d._id">{{getFormattedDate(d.time)}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="background-color: #7386D5;">GET PDF</button>
+            </form>
+
+        </div>
+    </div>
+
+    <%- include('./layout/footer') %>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                data: [],
+                form: {
+                    name: '',
+                    phone: '',
+                    email: '',
+                    street: '',
+                    zip: '',
+                    city: '',
+                    wie: '',
+                    date: '',
+                    obj: '',
+                    ve: '',
+                    ei: '',
+                    type: '',
+                    recordid: ''
+                },
+                types: ['water', 'electricity', 'gas', 'heat']
+            },
+            async mounted() {
+                let response = await fetch('/secured/api/user/data');
+                if (response.ok) {
+                    let r = await response.json();
+                    console.log(r.data)
+                    this.data = r.data;
+                    this.user = r.user;
+                    this.recordid = r.data[0]._id
+                }
+            },
+            methods: {
+                getFormattedDate(date) {
+                    date = new Date(date)
+                    var year = date.getFullYear();
+
+                    var month = (1 + date.getMonth()).toString();
+                    month = month.length > 1 ? month : '0' + month;
+
+                    var day = date.getDate().toString();
+                    day = day.length > 1 ? day : '0' + day;
+
+                    return day + '-' + month + '-' + year + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                },
+                async onSubmit() {
+                    let response = await fetch('/secured/api/user/download', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(this.form)
+                    })
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>

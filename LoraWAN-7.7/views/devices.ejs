@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('./layout/head') %>
+</head>
+<style>
+    table tbody {
+        display: block;
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+
+    table thead,
+    table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .action-list {
+        display: flex;
+        justify-content: space-around;
+    }
+</style>
+
+<body>
+    <div id="app" class="wrapper">
+        <%- include('./layout/adminMenu') %>
+
+            <!-- Page Content  -->
+            <div id="content">
+
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container-fluid">
+
+                        <button type="button" id="sidebarCollapse" class="btn btn-info">
+                            <i class="fas fa-align-left"></i>
+                            <span>Menü</span>
+                        </button>
+                    </div>
+                </nav>
+
+                <div>
+                    <img src="/images/city.png" style="height:330px" />
+                </div>
+
+                <h5 class="bg-secondary text-white text-center">action</h5>
+                <div style="margin-bottom: 20px;" class="action-list">
+                    <button class="btn btn-secondary" @click="handleImportExcel">
+                        Eingabe
+                    </button>
+                    <input type="file" value="Eingabe" style="display: none;" ref="referenceUpload" id="import"
+                        @change="handleImportInputChange">
+                    <button class="btn btn-primary">
+                        <a href="/excel/admin/excel/devices" target="_self">Ausgabe</a>
+                    </button>
+                </div>
+
+                <h5 class="bg-secondary text-white text-center">Zählers verwalten</h5>
+
+
+                <table class="table">
+                    <thead class="thead-light" style="text-align: center;">
+                        <tr>
+                            <th scope="col">Zähler ID</th>
+                            <th scope="col">WIE</th>
+                            <th scope="col">Objekt</th>
+                            <th scope="col">VE</th>
+                            <th scope="col">Elemente</th>
+                            <th scope="col">Zähler Nr.</th>
+                        </tr>
+                    </thead>
+                    <thead class="thead-light" style="text-align: center;">
+                        <tr>
+                            <th scope="col">
+                                <input style="width: 100%;" v-model="deviceid" type="text">
+                            </th>
+                            <th scope="col">
+                                <input style="width: 100%;" v-model="wie" type="text">
+                            </th>
+                            <th scope="col">
+                                <input style="width: 100%;" v-model="obj" type="text">
+                            </th>
+                            <th scope="col">
+                                <input style="width: 100%;" v-model="ve" type="text">
+                            </th>
+                            <th scope="col">
+                                <input style="width: 100%;" v-model="ei" type="text">
+                            </th>
+                            <th scope="col">
+                                <input style="width: 100%;" v-model="id" type="text">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody style="text-align: center;">
+
+                        <tr v-for="(d,index ) in displayData" :key="index">
+                            <th scope="row" style="color: rgb(17, 169, 240);"><a
+                                    :href="'/secured/dashboard/device/'+d._id">{{d.deviceid}}</a></th>
+                            <th>{{d.wie}}</th>
+                            <td>{{d.obj}}</td>
+                            <td>{{d.ve}}</td>
+                            <td>{{d.ei}}</td>
+                            <td>{{d.id}}</td>
+                        </tr>
+                        <tr>
+
+                    </tbody>
+                </table>
+
+                <div class="line"></div>
+
+            </div>
+    </div>
+
+    <%- include('./layout/footer') %>
+
+        <script>
+            new Vue({
+                el: '#app',
+                data: {
+                    deviceData: [],
+                    displayData: [],
+                    deviceid: '',
+                    id: '',
+                    wie: '',
+                    date: '',
+                    obj: '',
+                    ve: '',
+                    ei: '',
+                    type: '',
+                    types: ['water', 'electricity', 'gas', 'heat']
+                },
+                async mounted() {
+                    let response = await fetch('/secured/api/devices');
+                    if (response.ok) {
+                        let r = await response.json();
+                        console.log(r.data)
+                        this.deviceData = r.data;
+                        this.displayData = [...this.deviceData];
+                    }
+                },
+                methods: {
+
+                    getFormattedDate(date) {
+                        date = new Date(date)
+                        var year = date.getFullYear();
+
+                        var month = (1 + date.getMonth()).toString();
+                        month = month.length > 1 ? month : '0' + month;
+
+                        var day = date.getDate().toString();
+                        day = day.length > 1 ? day : '0' + day;
+
+                        return day + '/' + month + '/' + year;
+                    }, search() {
+                        this.displayData = this.deviceData.filter(e => e.wie.includes(this.wie))
+                        this.displayData = this.displayData.filter(e => e.obj.includes(this.obj))
+                        this.displayData = this.displayData.filter(e => e.ve.includes(this.ve))
+                        this.displayData = this.displayData.filter(e => e.ei.includes(this.ei))
+                        this.displayData = this.displayData.filter(e => e.deviceid.includes(this.deviceid))
+                        // this.displayData = this.displayData.filter(e => e.id === this.id)
+                        // console.log(this.types[e.type-1])
+                        // this.displayData = this.displayData.filter(e => this.types[e.type - 1].includes(this.type))
+                    },
+                    handleImportExcel() {
+                        $('#import').click();
+                    },
+                    handleImportInputChange(e) {
+                        const files = e.target.files
+                        let formdata = new FormData();
+                        formdata.append("file", files[0]);
+                        fetch('/excel/admin/excel/import/devices', {
+                            method: 'post',
+                            body: formdata,
+                        }).then(res => res.json())
+                            .catch(error => {
+                                this.$refs.referenceUpload.value = null;
+                                console.error('Error:', error)
+                            })
+                            .then(async res => {
+                                this.$refs.referenceUpload.value = null;
+                                if (res.code === 200) {
+                                    let response = await fetch('/secured/api/devices');
+                                    if (response.ok) {
+                                        let r = await response.json();
+                                        console.log(r.data)
+                                        this.deviceData = r.data;
+                                        this.displayData = [...this.deviceData];
+                                    }
+                                } else {
+                                    alert(res.msg)
+                                }
+                            });
+                    }
+                },
+                watch: {
+                    deviceid: function (val) {
+                        this.search();
+                    },
+                    wie: function (val) {
+                        this.search();
+                    },
+                    obj: function (val) {
+                        this.search();
+                    },
+                    ei: function (val) {
+                        this.search();
+                    },
+                    ve: function (val) {
+                        this.search();
+                    },
+                    id: function (val) {
+                        this.search();
+                    },
+                },
+            })
+        </script>
+</body>
+
+</html>

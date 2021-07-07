@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('./layout/head') %>
+</head>
+<style>
+    table tbody {
+        display: block;
+        max-height: 250px;
+        overflow-y: scroll;
+    }
+
+    table thead,
+    table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+</style>
+
+<body>
+    <div id="app" class="wrapper">
+        <%- include('./layout/userMenu') %>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Menü</span>
+                    </button>
+
+                </div>
+            </nav>
+
+
+            <div>
+                <img src="/images/city.png"  style="height:330px"/>
+            </div>
+
+
+            <h5 class="bg-secondary text-white text-center">Datei Einzelheiten</h5>
+
+
+            <table class="table" style="height: 35%;">
+                <!-- <thead class="thead-light">
+                  <tr>
+                    <th scope="col">User Id</th>
+                    <th scope="col">User Name</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead> -->
+                <tbody style="height: 100%; max-height: 100%;">
+                    <tr>
+                        <td><b>Wirtschaftseinheit</b></td>
+                        <td class="bg-secondary text-white text-right">{{form.wie}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><b>Objekt</b></td>
+                        <td class="bg-secondary text-white text-right">{{form.obj}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><b>Verwaltungseinheit</b></td>
+                        <td class="bg-secondary text-white text-right">{{form.ve}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><b>Elemente</b></td>
+                        <td class="bg-secondary text-white text-right">{{form.ei}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                    <tr>
+                        <td><b>Zähler Id</b></td>
+                        <td v-if="!edit" class="bg-secondary text-white text-right">{{form.deviceid}}</td>
+                        <td v-else><input v-model="copy.deviceid" type="text" class="bg-secondary text-white text-right"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><b>Zähler Nr.</b></td>
+                        <td v-if="!edit" class="bg-secondary text-white text-right">{{form.id}}</td>
+                        <td v-else><input v-model="copy.id" type="number" class="bg-secondary text-white text-right"></td>
+                        <td></td>
+                    </tr>
+                    <!-- <td><b>Water Useage</b></td>
+                        <td v-if="!edit">{{form.water}}</td>
+                        <td v-else><input v-model="copy.water" type="number"></td>
+                        <td></td> -->
+                    <!-- <td v-if="!edit"><button @click="editData" class="btn btn-sm btn-warning">Edit</button></td>
+                        <td v-else>
+                            <button @click="update(edit)" class="btn btn-sm btn-success">Save</button>
+                            <button @click="edit=false" class="btn btn-sm btn-danger">Cancel</button>
+                        </td> -->
+                    </tr>
+                    <tr>
+                        <td><b>Zählerstand</b></td>
+                        <td v-if="!edit" class="bg-secondary text-white text-right">{{form.value}}</td>
+                        <td v-else><input v-model="copy.value" type="number" class="bg-secondary text-white text-right"></td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td><b>Datum</b></td>
+                        <td class="bg-secondary text-white text-right">{{getFormattedDate(form.time)}}</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="line"></div>
+            <div><button @click="feedback=true;id = ''" class="btn btn-sm btn-warning">Send Feedback</button></div>
+            <div v-if="feedback" class="form-group">
+                <label for="exampleFormControlTextarea1"><b>Say Some thing</b></label>
+                <textarea class="form-control" v-model="content" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <br>
+                <button @click="send" class="btn btn-sm btn-success" style="background-color: #7386D5;">Send</button>
+            </div>
+            <div v-if="id" class="form-group">
+                <br>
+                <div v-if="id" class="alert alert-success" role="alert">
+                    FeedBack ID is {{id}}
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <%- include('./layout/footer') %>
+
+    <script>
+        var id = '<%= id  %>';
+        new Vue({
+            el: '#app',
+            data: {
+                form: { userid: {} },
+                fees: {},
+                copy: {},
+                feedback: false,
+                content: '',
+            },
+            async mounted() {
+                let response = await fetch('/secured/api/user/data/' + id);
+                if (response.ok) {
+                    let r = await response.json();
+                    this.form = r.data;
+                    this.copy = this.form;
+                    this.fees = r.fees;
+                }
+            },
+            methods: {
+                getFormattedDate(date) {
+                    date = new Date(date)
+                    var year = date.getFullYear();
+                    var month = (1 + date.getMonth()).toString();
+                    month = month.length > 1 ? month : '0' + month;
+                    var day = date.getDate().toString();
+                    day = day.length > 1 ? day : '0' + day;
+                    return day + '/' + month + '/' + year;
+                },
+                async send() {
+
+                    let response = await fetch('/secured/api/user/feedback/' + id, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            dataid: id,
+                            content: this.content
+                        })
+                    });
+                    if (response.ok) {
+                        let data = await response.json();
+                        this.feedback = false;
+                        this.content = '';
+                        this.id = data.data._id;
+                        setTimeout(() => {
+                            this.id = ''
+                        }, 4000)
+                    }
+
+                },
+            },
+        })
+    </script>
+</body>
+
+</html>
