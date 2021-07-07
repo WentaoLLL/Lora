@@ -6,6 +6,7 @@ const multer = require('multer')
 const Auth = require('../model/auth');
 const Data = require('../model/data');
 const Device = require('../model/device');
+const crypto = require('crypto');
 
 let upload = multer({
     storage: multer.diskStorage({
@@ -19,21 +20,6 @@ let upload = multer({
         }
     })
 });
-
-function handleExcelDate(numb, format) {
-    const time = new Date((numb - 1) * 24 * 3600000 + 1);
-    time.setYear(time.getFullYear() - 70);
-    time.setHours(time.getHours() - 8);
-    const year = time.getFullYear() + '';
-    const month = time.getMonth() + 1 + '';
-    const date = time.getDate() - 1 + '';
-    const hours = time.getHours().toLocaleString();
-    const minutes = time.getMinutes();
-    if (format && format.length === 1) {
-        return year + format + month + format + date + ' ' + hours + ':' + minutes;
-    }
-    return year + (month < 10 ? '0' + month : month) + (date < 10 ? '0' + date : date);
-}
 
 
 // 导出管理端Auth表的数据
@@ -76,12 +62,13 @@ router.post('/admin/excel/import/auths', upload.single('file'), async (req, res)
             let query = {
                 username: item[0],
                 email: item[1],
-                password: item[2],
+                password: crypto.createHash('md5').update(String(item[2])).digest('hex'),
                 role: Number(item[3]),
                 time: item[4]
             }
             data.push(query)
         };
+        console.log(data)
         // 插入数据
         const res_data = await Auth.insertMany(data).catch(e => {
             res.status(200).json({

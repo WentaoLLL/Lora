@@ -39,17 +39,17 @@
             <div class="container-fluid">
                 <div>
                      <img src="/images/city.png"  style="height:330px"/>
+
+                 </div>
+                 <h5 class="bg-secondary text-white text-center">action</h5>
+                 <div style="margin-bottom: 20px;" class="action-list">
+                     <button class="btn btn-primary">
+                         <a href="/excel/admin/excel/datas?userid=<%= user._id %>" target="_self">Ausgabe</a>
+                     </button>
                  </div>
                     <h5 class="bg-secondary text-white text-center">
                      Datei Charts
                     </h5>
-                    
-                <ul class="list-unstyled CTAs">
-                     <li>
-                        <a href="https://www.lodige.com/de-de/produkte/parkloesungen/parksysteme" class="download">Parkplätzssysteme</a>
-                     </li>
-                </ul>
-                 
                 <ul class="list-unstyled CTAs">
                     <li>
                         <a href="/secured/dashboard" class="download">Aktualisierung</a>
@@ -342,9 +342,9 @@
                     },
                     scales: {
                         xAxes: [{
-                            display: true,
+                            display: false,
                             scaleLabel: {
-                                display: true,
+                                display: false,
                                 labelString: 'Datum'
                             }
                         }],
