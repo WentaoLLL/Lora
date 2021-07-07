@@ -40,6 +40,23 @@
                 <div>
                      <img src="/images/city.png"  style="height:330px"/>
                  </div>
+                 
+                 <h5 class="bg-secondary text-white text-center">action</h5>
+                 <div style="margin-bottom: 20px;" class="action-list">
+                    <button class="btn btn-secondary" @click="handleImportExcel">
+                        Eingabe
+                    </button>
+                    <input type="file" value="Eingabe" style="display: none;" ref="referenceUpload" id="import"
+                        @change="handleImportInputChange">
+                    <div>
+                        <span>WIE</span>
+                        <input type="text" v-model="wieValue" style="padding-left: 10px;" />
+                        <button class="btn btn-primary">
+                            <a :href="'/excel/admin/excel/datas?wie='+wieValue" target="_self">Ausgabe</a>
+                        </button>
+                    </div>
+                 </div>
+                 
                     <h5 class="bg-secondary text-white text-center">
                      Datei Charts
                     </h5>
