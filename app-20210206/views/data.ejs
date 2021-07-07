@@ -7,7 +7,7 @@
 <style>
     table tbody {
         display: block;
-        max-height: 300px;
+        max-height: 470px;
         overflow-y: scroll;
     }
 
@@ -17,12 +17,16 @@
         width: 100%;
         table-layout: fixed;
     }
+
+    .highcharts-figure {
+        width: 80%;
+    }
 </style>
+<link rel="stylesheet" href="/stylesheets/chart.min.css">
 
 <body>
     <div id="app" class="wrapper">
-        <!-- Sidebar  -->
-        <%- include('./layout/userMenu') %>
+        <%- include('./layout/adminMenu') %>
 
         <!-- Page Content  -->
         <div id="content">
@@ -36,111 +40,109 @@
                     </button>
                 </div>
             </nav>
-            <div class="container-fluid">
-                <div>
-                     <img src="/images/city.png"  style="height:330px"/>
-                 </div>
-                    <h5 class="bg-secondary text-white text-center">
-                     Datei Charts
-                    </h5>
-                    
-                <ul class="list-unstyled CTAs">
-                     <li>
-                        <a href="https://www.lodige.com/de-de/produkte/parkloesungen/parksysteme" class="download">Parkplätzssysteme</a>
-                     </li>
-                </ul>
-                 
-                <ul class="list-unstyled CTAs">
-                    <li>
-                        <a href="/secured/dashboard" class="download">Aktualisierung</a>
-                    </li>
-                </ul>
-                </div>
-            <ul >
-            </ul >
 
             <div>
-                <div style="width: 70%;margin-bottom: 20px;display: inline-block;vertical-align: top;margin-top: -20px;">
-                    <canvas id="chartCanvas" height="150px" style="display:block;height:200px"
-                        class="chartjs-render-monitor"></canvas>
-                    <div style="text-align:center; margin-top: 20px;">
-                        <!--button
-                            style="margin-right: 20px;border:0;border-radius: 4px;height: 30px;width:70px;background-color: #87CEFA;"
-                            onclick="ByDay()">Tag</button-->
-                        <button
-                            style="margin-right: 20px;border:0;border-radius: 4px;height: 30px;width:70px;background-color: #87CEFA;"
-                            onclick="ByHour()">Tag</button>
-                        <button
-                            style="margin-right: 20px;border:0;border-radius: 4px;background-color:gray;height: 30px;width:70px;background-color: #87CEFA;"
-                            onclick="ByMonth()">Monat</button>
-                        <button
-                            style="border:0;border-radius: 4px;background-color:gray;height: 30px;width:70px;background-color: #87CEFA;margin-right: 100px;"
-                            onclick="ByYear()">Jahr</button>
-                        <input type="text" data-range="true" data-multiple-dates-separator=" - " data-language="en" class="datepicker-here" style="width:200px"/>
-                        <button
-                            style="margin-right: 20px;border:0;border-radius: 4px;height: 30px;width:70px;background-color: #87CEFA;"
-                            onclick="BySearch()">Suchen</button>
+                <img src="/images/city.png"  style="height:330px"/>
+            </div>
+            <h5 class="bg-secondary text-white text-center" >
+                Datei Charts
+            </h5>
+            <div style="padding: 10px;">
+                <div class="user_charts" style="display: none;">
+                    <div style="width: 70%;margin-bottom: 20px;display: inline-block;vertical-align: top;margin-top: -20px;">
+                        <canvas id="chartCanvas" height="100px" style="display:block;height:150px"
+                            class="chartjs-render-monitor"></canvas>
+                        <div style="text-align:center; margin-top: 20px;">
+                            <button
+                                style="margin-right: 20px;border:0;border-radius: 4px;height: 30px;width:70px;background-color: #87CEFA;"
+                                onclick="ByHour()">Tag</button>
+                            <button
+                                style="margin-right: 20px;border:0;border-radius: 4px;background-color:gray;height: 30px;width:70px;background-color: #87CEFA;"
+                                onclick="ByMonth()">Monat</button>
+                            <button
+                                style="border:0;border-radius: 4px;background-color:gray;height: 30px;width:70px;background-color: #87CEFA;margin-right: 100px;"
+                                onclick="ByYear()">Jahr</button>
+                            <input type="text" data-range="true" data-multiple-dates-separator=" - " data-language="en" class="datepicker-here" style="width:200px"/>
+                            <button
+                                style="margin-right: 20px;border:0;border-radius: 4px;height: 30px;width:70px;background-color: #87CEFA;"
+                                onclick="BySearch()">Suchen</button>
+                        </div>
+                    </div>
+                    <div style="display: inline-block;width: 28%;vertical-align: top;">
+                        <canvas id="totalCanvas" height="265px" style="display:block;height:200px;margin-top: -20px;"
+                            class="chartjs-render-monitor"></canvas>
+                        <div style="text-align:center"><button style="display: hidden;border:0"></button></div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="water_pie" style="display: inline-block;width: 24%;vertical-align: top;">
+                            <canvas id="waterPieCanvas" height="270px" style="display:block;height:270px"
+                                class="chartjs-render-monitor"></canvas>
+                        </div>
+                        <div class="electron_pie" style="display: inline-block;width: 25%;vertical-align: top;">
+                            <canvas id="electronPieCanvas" height="270px" style="display:block;height:270px"
+                                class="chartjs-render-monitor"></canvas>
+                        </div>
+                        <div class="gas_pie"
+                            style="display: inline-block;width: 24%;vertical-align: top;">
+                            <canvas id="gasPieCanvas" height="270px" style="display:block;height:270px"
+                                class="chartjs-render-monitor"></canvas>
+                        </div>
+                        <div class="heat_pie"
+                            style="display: inline-block;width: 25%;vertical-align: top;">
+                            <canvas id="heatPieCanvas" height="270px" style="display:block;height:270px"
+                                class="chartjs-render-monitor"></canvas>
+                        </div>
                     </div>
                 </div>
-                <div style="display: inline-block;width: 28%;vertical-align: top;">
-                    <canvas id="totalCanvas" height="243px" style="display:block;height:200px;margin-top: -20px;"
-                        class="chartjs-render-monitor"></canvas>
-                    <div style="text-align:center"><button style="display: hidden;border:0"></button></div>
+                <div style="text-align: center;margin-top: 20px;">
+                    <span>User Search</span>
+                    <input type="text" id="user_id" style="padding-left: 10px;"/>
+                    <button style="margin-right: 20px;border:0;border-radius: 4px;height: 30px;width:70px;background-color: #87CEFA;"
+                    onclick="searchUser()">Suchen</button>
                 </div>
             </div>
 
-            <div>
-                <div class="water_pie" style="display: inline-block;width: 24%;vertical-align: top;">
-                    <canvas id="waterPieCanvas" height="300px" style="display:block;height:300px"
-                        class="chartjs-render-monitor"></canvas>
-                </div>
-                <div class="electron_pie" style="display: inline-block;width: 25%;vertical-align: top;">
-                    <canvas id="electronPieCanvas" height="300px" style="display:block;height:300px"
-                        class="chartjs-render-monitor"></canvas>
-                </div>
-                <div class="gas_pie"
-                    style="display: inline-block;width: 24%;vertical-align: top;">
-                    <canvas id="gasPieCanvas" height="300px" style="display:block;height:300px"
-                        class="chartjs-render-monitor"></canvas>
-                </div>
-                <div class="heat_pie"
-                    style="display: inline-block;width: 25%;vertical-align: top;">
-                    <canvas id="heatPieCanvas" height="300px" style="display:block;height:300px"
-                        class="chartjs-render-monitor"></canvas>
-                </div>
-            </div>
+            <h5 class="bg-secondary text-white text-center" >
+                Datei Liste
+            </h5>
+            
+            <ul class="list-unstyled CTAs">
+                <li>
+                    <a href="https://www.youtube.com" class="download">Parkplätzssysteme</a>
+                </li>
+            </ul>
+            
+            <ul class="list-unstyled CTAs">
+                <li>
+                    <a href="/secured/dashboard" class="download">Aktualisierung</a>
+                </li>
+            </ul>
+            <!--<pp class="bg-info text-white border border-dark">
+                Datei Liste
+            </pp>-->
+            <!--<h3>Datei Liste</h3>-->
 
 
 
-            <div class="dropdown">
 
-                <h5 class="bg-secondary text-white text-center">
-                    Datei Liste <span class="caret"></span>
-                </h5>
-                <h6 class="bg-secondary text-white text-center" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
-                    Hier kicken,um die Datei Liste zu schauen! <span class="caret"></span>
-                </h6>
-
-             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-
-            <table class="table">
-                <thead class="thead-light" style="text-align: center;">
-                    <tr>
-                        <th scope="col"></th>
-                        <th scope="col">WIE</th>
-                        <th scope="col">Objekt</th>
-                        <th scope="col">VE</th>
-                        <th scope="col">Elemente</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Zähler ID</th>
-                        <th scope="col">Zahl</th>
-                        <th scope="col">Datum</th>
-                    </tr>
-                </thead>
-                <thead class="thead-light" style="text-align: center;">
-                    <tr>
-                        <th scope="col" >
-                            <!-- <input style="width: 100%;" v-model="userid" @change="onChange('id')" type="text" placeholder="Record ID"> -->
+    <table class="table">
+        <thead class="thead-light" style="text-align: center;">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">WIE</th>
+                <th scope="col">Objekt</th>
+                <th scope="col">VE</th>
+                <th scope="col">Elemente</th>
+                <th scope="col">Einheit</th>
+                <th scope="col">Zähler ID</th>
+                <th scope="col">Zählerstand</th>
+                <th scope="col">Datum</th>
+            </tr>
+        </thead>
+        <thead class="thead-light" style="text-align: center;">
+            <tr>
+                <th scope="col" style="width: 10vw;">
+                    <!-- <input style="width: 100%;" v-model="userid" @change="onChange('id')" type="text" placeholder="Record ID"> -->
                         </th>
                         <th scope="col">
                             <input style="width: 100%;" v-model="wie" type="text"></th>
@@ -167,8 +169,8 @@
                 <tbody style="text-align: center;">
 
                     <tr v-for="(d,index ) in displayData" :key="index">
-                        <th scope="row" style="color: rgb(17, 169, 240);"><a
-                                :href="'/secured/user/dashboard/data/'+d._id">Einzelheiten</a></th>
+                        <th scope="row" style="width: 10vw;color: rgb(17, 169, 240);"><a
+                                :href="'/secured/dashboard/data/'+d._id">Einzelheiten</a></th>
                         <th>{{d.wie}}</th>
                         <td>{{d.obj}}</td>
                         <td>{{d.ve}}</td>
@@ -179,11 +181,11 @@
                         <td>{{getFormattedDate(d.time)}}</td>
                     </tr>
 
+
                 </tbody>
             </table>
-             </ul>
 
-            </div>
+            <div class="line"></div>
 
         </div>
     </div>
@@ -192,7 +194,7 @@
 
     <script>
         var content, config, pieConfig;
-        var dates;
+        var datas;
         new Vue({
             el: '#app',
             data: {
@@ -208,21 +210,12 @@
                 types: ['Wasser [m^3]', 'Storm [kW/h]', 'Gas [m^3]', 'Heizung [m^3]']
             },
             async mounted() {
-                let response = await fetch('/secured/api/user/data');
+                let response = await fetch('/secured/api/data');
                 if (response.ok) {
                     let r = await response.json();
+                    console.log(r.data)
                     this.userData = r.history;
-                    this.user = r.user;
                     this.displayData = [...this.userData];
-                    if (r.data) {
-                        content = r.data;
-                        createCharts(r.data);
-                        createTotalCharts(r.data)
-                        createWaterPie(r.data);
-                        createElectronPie(r.data);
-                        createGasPie(r.data);
-                        createHeatPie(r.data);
-                    }
                 }
             },
             methods: {
@@ -233,11 +226,7 @@
                     month = month.length > 1 ? month : '0' + month;
                     var day = date.getDate().toString();
                     day = day.length > 1 ? day : '0' + day;
-                    // 转换时分
-                    var hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-                    var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-
-                    return day + '/' + month + '/' + year + ' ' + hour + ':' + minutes;
+                    return day + '/' + month + '/' + year;
                 }, search() {
                     this.displayData = this.userData.filter(e => e.wie.includes(this.wie))
                     this.displayData = this.displayData.filter(e => e.obj.includes(this.obj))
@@ -250,25 +239,25 @@
                 }
             },
             watch: {
-                wie: function(val) {
+                wie: function (val) {
                     this.search();
                 },
-                obj: function(val) {
+                obj: function (val) {
                     this.search();
                 },
-                ei: function(val) {
+                ei: function (val) {
                     this.search();
                 },
-                ve: function(val) {
+                ve: function (val) {
                     this.search();
                 },
-                type: function(val) {
+                type: function (val) {
                     this.search();
                 },
-                deviceid: function(val) {
+                deviceid: function (val) {
                     this.search();
                 },
-                date: function(val) {
+                date: function (val) {
                     this.wie = '';
                     this.obj = '';
                     this.ve = '';
@@ -277,7 +266,27 @@
                     this.displayData = this.userData.filter(e => this.getFormattedDate(e.time).includes(val))
                 }
             },
-        })
+        });
+
+        async function searchUser() {
+            var user_id = $('#user_id').val();
+            if (!user_id) return;
+            let response = await fetch('/secured/api/user/data?user_id='+user_id);
+            if (response.ok) {
+                let r = await response.json();
+                console.log(r.data)
+                if (r.data) {
+                    content = r.data;
+                    createCharts(r.data);
+                    createTotalCharts(r.data)
+                    createWaterPie(r.data);
+                    createElectronPie(r.data);
+                    createGasPie(r.data);
+                    createHeatPie(r.data);
+                    $('.user_charts').show();
+                }
+            }
+        }
 
         window.chartColors = {
             red: 'rgb(255, 99, 132)',
@@ -292,7 +301,7 @@
         function createCharts(body) {
             //var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             config = {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: body.label_x_hour,
                     datasets: [{
@@ -600,7 +609,8 @@
             if (dates) {
                 var start = dates[0] && getFormattedDate(dates[0], true);
                 var end = dates[1] && getFormattedDate(dates[1], true) || '';
-                let response = await fetch('/secured/api/user/data/date?start='+start+'&end='+end);
+                var user_id = $('#user_id').val() || '';
+                let response = await fetch('/secured/api/user/data/date?start='+start+'&end='+end+'&user_id='+user_id);
                 if (response.ok) {
                     let r = await response.json();
                     console.log(r)
