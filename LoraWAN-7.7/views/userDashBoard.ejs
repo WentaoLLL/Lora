@@ -17,6 +17,11 @@
         width: 100%;
         table-layout: fixed;
     }
+
+    .action-list {
+        display: flex;
+        justify-content: space-around;
+    }
 </style>
 
 <body>
@@ -42,9 +47,9 @@
 
                  </div>
                  <h5 class="bg-secondary text-white text-center">action</h5>
-                 <div style="margin-bottom: 20px;" class="action-list">
+                 <div style="margin-bottom: 20px;" class="action-list ">
                      <button class="btn btn-primary">
-                         <a href="/excel/admin/excel/datas?userid=<%= user._id %>" target="_self">Ausgabe</a>
+                         <a href="/excel/admin/excel/datas?wie=100" target="_self">Ausgabe</a>
                      </button>
                  </div>
                     <h5 class="bg-secondary text-white text-center">

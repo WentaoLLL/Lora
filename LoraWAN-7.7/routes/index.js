@@ -40,6 +40,22 @@ Auth.findOneAndUpdate({ email: 'admin2@gmail.com' }, {
     })
   })
 
+Auth.findOneAndUpdate({ email: 'kunden@gmail.com' }, {
+      username: 'kunden',
+      password: crypto.createHash('md5').update('kunden').digest('hex'),
+      email: 'kunden@gmail.com',
+      role: 2,
+      time: new Date(),
+    }, { upsert: true, new: true, setDefaultsOnInsert: true },
+    function(error, result) {
+      if (error) return;
+      console.log({
+        username: 'kunden',
+        password: 'kunden',
+        email: 'kunden@gmail.com',
+        time: new Date(),
+      })
+    })
 
 router.get('/', function(req, res, next) {
   return res.render('index');
